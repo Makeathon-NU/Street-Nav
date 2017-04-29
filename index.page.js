@@ -1,4 +1,4 @@
-﻿// Distance in feet to speak approaching street.
+// Distance in feet to speak approaching street.
 var m_dblApproachDistanceKm = convertFTtoKM(200.0);
 
 // Intersection history, last X items.
@@ -7,12 +7,39 @@ var m_aryIntersectionHistory = new Array();
 var m_strLastIntersection = "";
 var m_strLastAddress = "";
 
-function getGeoUser() {
-  m_strUsername = prompt(
-    "To use this service, you must enter your GeoName username below : ",
-    "Username"
-  );
-	return;
+function setCookie(cname) {
+    var date = new Date();
+    date.setTime(date.getTime() + (14*24*60*60*1000));
+    var expires = "expires="+ date.toUTCString();
+    document.cookie = cname + "=" + m_strUsername + ";" + expires;
+}
+
+function getCookie(cname) {
+    var name = cname + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    var ca = decodedCookie.split(';');
+    for(var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}
+
+function checkCookie() {
+    m_strUsername=getCookie("username");
+    if (m_strUsername != "") {
+        //do nothing
+    } else {
+       m_strUsername = prompt("To use this service, you must enter your GeoName username below : ", "Username");
+       if (m_strUsername != "" && m_strUsername != null) {
+           setCookie("username", m_strUsername, 30);
+       }
+    }
 }
 
 $(document).ready(function()
