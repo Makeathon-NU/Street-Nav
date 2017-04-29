@@ -7,7 +7,7 @@ body
 input
 {
   height: 200px;
-  width: 40px;
+  width: 100%;
   font-size: inherit;
   font-weight: inherit;
 }
@@ -25,6 +25,7 @@ input[type=text]
 input[type=number]
 {
   background-color: #FFFF99;
+  width: 75px;
 }
 
 textarea
