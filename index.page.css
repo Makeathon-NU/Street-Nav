@@ -1,6 +1,7 @@
-﻿body
+body
 {
   font-size: 100px;
+  font-weight: bold;
 }
 
 input
@@ -8,6 +9,7 @@ input
   height: 200px;
   width: 100%;
   font-size: inherit;
+  font-weight: inherit;
 }
 
 input[type=button]
@@ -23,12 +25,24 @@ input[type=text]
 input[type=number]
 {
   background-color: #FFFF99;
+  width: 305px;
+  height: 80%;
 }
+
+div#min {
+  text-align: center;
+}
+
+p {
+  font-size: 50px;
+  margin-bottom: 0px;
+}
+
 
 textarea
 {
-  width: 100%;
-  font-size: 50px;
+  width: 75%;
+  font-size: 30px;
 }
 
 table
