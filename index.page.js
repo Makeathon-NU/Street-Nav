@@ -14,6 +14,7 @@ function getGeoUser() {
     "To use this service, you must enter your GeoName username below : ",
     "Username"
   );
+	return;
 }
 
 $(document).ready(function()
