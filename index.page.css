@@ -29,10 +29,18 @@ input[type=number]
   height: 80%;
 }
 
+div#min {
+  text-align: center;
+}
+
+p {
+  font-size: 30px;
+}
+
 textarea
 {
-  width: 100%;
-  font-size: 50px;
+  width: 75%;
+  font-size: 25px;
 }
 
 table
