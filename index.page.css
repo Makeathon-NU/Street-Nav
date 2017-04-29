@@ -1,6 +1,7 @@
-﻿body
+body
 {
   font-size: 100px;
+  font-weight: bold;
 }
 
 input
@@ -8,6 +9,7 @@ input
   height: 200px;
   width: 100%;
   font-size: inherit;
+  font-weight: inherit;
 }
 
 input[type=button]
