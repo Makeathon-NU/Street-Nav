@@ -8,7 +8,7 @@ var m_strLastIntersection = "";
 var m_strLastAddress = "";
 
 function getGeoUser() {
-  var Val = prompt(
+  var username = prompt(
     "To use this service, you must enter your GeoName username below : ",
     "Username"
   );
@@ -16,7 +16,7 @@ function getGeoUser() {
 
 $(document).ready(function()
 {
-  m_strUsername = Val;
+  m_strUsername = username;
   
   document.getElementById('edAddressTimeout').value = Number(m_iAddrFrequencyMs / 1000).toFixed(1);
   document.getElementById('edIntersectionTimeout').value = Number(m_iIntersectionFrequencyMs / 1000).toFixed(1);
