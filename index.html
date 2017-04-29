@@ -12,7 +12,7 @@
 
 <div><input type="button" name="follow" value="Start" id="btnFollowStreets" /></div>
 <hr />
-<div><input type="button" name="location" value="Current Location" id="btnCurrentLocation" /></div>
+<div><input type="button" name="location" value="My Location" id="btnCurrentLocation" /></div>
 <hr />
 <div>
 <table>
@@ -31,14 +31,14 @@
 </table>
 </div>
 <hr />
-<div><label>Speak Current Location Every X Seconds<br />(0 for only speak when Current Location is pressed):</label> <input type="number" name="addressTimeout" id="edAddressTimeout" /></div>
-<div><label>Speak Intersection Within X Feet:</label> <input type="number" name="intersectionApproach" id="edIntersectionApproach" /></div>
-<div><label>Check for New Intersection Every X Seconds:</label> <input type="number" name="intersectionTimeout" id="edIntersectionTimeout" /></div>
+  <div><label>Speak My Location Every <i>X</i> Seconds</label><br /><input type="number" name="addressTimeout" id="edAddressTimeout" /></div>
+  <div><label>Speak Intersection Within <i>X</i> Feet:</label> <input type="number" name="intersectionApproach" id="edIntersectionApproach" /></div>
+<div><label>Look for New Intersection Every <i>X</i> Seconds:</label> <input type="number" name="intersectionTimeout" id="edIntersectionTimeout" /></div>
 <div><input type="button" name="applySettings" value="Apply Settings" id="btnApplySettings" /></div>
 
 <br />
-<div>Debug Information:<br /><textarea id="edDebug" rows="4"></textarea></div>
-<div>Error Information:<br /><textarea id="edError" rows="4"></textarea></div>
+<div id="min">Debug Information:<br /><textarea id="edDebug" rows="4"></textarea></div>
+<div id="min">Error Information:<br /><textarea id="edError" rows="4"></textarea></div>
 
 <script type="text/javascript" src="jquery-3.2.1.min.js"></script>
 <script type="text/javascript" src="geofunctions.js"></script>
