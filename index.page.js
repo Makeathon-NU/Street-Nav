@@ -7,10 +7,16 @@ var m_aryIntersectionHistory = new Array();
 var m_strLastIntersection = "";
 var m_strLastAddress = "";
 
+function getGeoUser() {
+  var Val = prompt(
+    "To use this service, you must enter your GeoName username below : ",
+    "Username"
+  );
+}
 
 $(document).ready(function()
 {
-  m_strUsername = "julied4";
+  m_strUsername = Val;
   
   document.getElementById('edAddressTimeout').value = Number(m_iAddrFrequencyMs / 1000).toFixed(1);
   document.getElementById('edIntersectionTimeout').value = Number(m_iIntersectionFrequencyMs / 1000).toFixed(1);
