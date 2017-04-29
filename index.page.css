@@ -1,0 +1,44 @@
+﻿body
+{
+  font-size: 100px;
+}
+
+input
+{
+  height: 200px;
+  width: 100%;
+  font-size: inherit;
+}
+
+input[type=button]
+{
+  background-color:#CC99FF;
+}
+
+input[type=text]
+{
+  background-color: #FFFF99;
+}
+
+input[type=number]
+{
+  background-color: #FFFF99;
+}
+
+textarea
+{
+  width: 100%;
+  font-size: 50px;
+}
+
+table
+{
+  width: 100%;
+  border: 1px solid black;
+}
+
+table td
+{
+  width: 50%;
+  border: 1px solid black;
+}

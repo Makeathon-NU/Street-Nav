@@ -1,0 +1,49 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+<title>Darcy Map Help</title>
+
+<link rel="stylesheet" type="text/css" href="index.page.css" />
+</head>
+
+<body>
+
+<div><input type="button" name="follow" value="Start" id="btnFollowStreets" /></div>
+<hr />
+<div><input type="button" name="location" value="Current Location" id="btnCurrentLocation" /></div>
+<hr />
+<div>
+<table>
+<tr>
+  <td>Intersection:</td>
+  <td id="tdIntersection"></td>
+</tr>
+<tr>
+  <td>Address:</td>
+  <td id="tdAddress"></td>
+</tr>
+<tr>
+  <td>Speed &amp; Direction:</td>
+  <td id="tdSpeedDirection"></td>
+</tr>
+</table>
+</div>
+<hr />
+<div><label>Speak Current Location Every X Seconds<br />(0 for only speak when Current Location is pressed):</label> <input type="number" name="addressTimeout" id="edAddressTimeout" /></div>
+<div><label>Speak Intersection Within X Feet:</label> <input type="number" name="intersectionApproach" id="edIntersectionApproach" /></div>
+<div><label>Check for New Intersection Every X Seconds:</label> <input type="number" name="intersectionTimeout" id="edIntersectionTimeout" /></div>
+<div><input type="button" name="applySettings" value="Apply Settings" id="btnApplySettings" /></div>
+
+<br />
+<div>Debug Information:<br /><textarea id="edDebug" rows="4"></textarea></div>
+<div>Error Information:<br /><textarea id="edError" rows="4"></textarea></div>
+
+<script type="text/javascript" src="jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="geofunctions.js"></script>
+<script type="text/javascript" src="index.page.js"></script>
+<script type="text/javascript" src="TextToSpeech.js"></script>
+</body>
+
+</html>
