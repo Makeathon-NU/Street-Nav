@@ -7,8 +7,10 @@ var m_aryIntersectionHistory = new Array();
 var m_strLastIntersection = "";
 var m_strLastAddress = "";
 
+var username = "";
+
 function getGeoUser() {
-  var username = prompt(
+  username = prompt(
     "To use this service, you must enter your GeoName username below : ",
     "Username"
   );
