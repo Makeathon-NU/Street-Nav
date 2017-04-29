@@ -10,7 +10,7 @@ var m_strLastAddress = "";
 
 $(document).ready(function()
 {
-  m_strUsername = "julied4";
+  m_strUsername = "ENTER YOUR USERNAME HERE";
   
   document.getElementById('edAddressTimeout').value = Number(m_iAddrFrequencyMs / 1000).toFixed(1);
   document.getElementById('edIntersectionTimeout').value = Number(m_iIntersectionFrequencyMs / 1000).toFixed(1);
