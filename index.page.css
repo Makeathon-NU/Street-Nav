@@ -18,7 +18,7 @@ input#btnFollowStreets {
   background-color: #000;
   background: url(https://s3.us-east-2.amazonaws.com/joe-random/2000px-Solid_white.svg.png) no-repeat right top;
   width: inherit;
-  border-style: solid 2px;
+  border-style: solid 4px;
   width: 100%;
   margin-bottom: 10px;
 }
