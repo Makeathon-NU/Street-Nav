@@ -60,7 +60,7 @@ function successGetCurrentPosition(position)
   OnUseCurrentPosition(position);
 };
 
-function errorGetCurrentPosition(positionError)
+function errorGetCurrentPositionLessAccurate(positionError)
 {
   if(positionError.code == 3
     && m_bGetCurrentLocation)
@@ -71,6 +71,12 @@ function errorGetCurrentPosition(positionError)
   
   OnGetCurrentPositionError(positionError);
 };
+
+function errorGetCurrentPositionAccurate(positionError)
+{
+  // Try the less accurate getCurrentPosition.
+  navigator.geolocation.getCurrentPosition(successGetCurrentPosition, errorGetCurrentPositionLessAccurate, {maximumAge: 20000, timeout:5000, enableHighAccuracy: false});
+}
 
 function successWatchPosition(position)
 {
@@ -224,19 +230,20 @@ function OnFollowAddressTimer()
   GetGeoCoordinates();
 };
 
-function GetBearing(fromGpsCoords, toGpsCoords)
+function GetBearing(fromPosition, toPosition)
 {
-  if(!fromGpsCoords || !toGpsCoords)
+  if(!fromPosition || !toPosition)
   {
-    return null;
+    return;
   }
   
-  var y = Math.sin(toRadians(toGpsCoords.longitude - fromGpsCoords.longitude)) * Math.cos(toRadians(toGpsCoords.latitude)); 
-  var x = Math.cos(toRadians(fromGpsCoords.latitude)) * Math.sin(toRadians(toGpsCoords.latitude)) - Math.sin(toRadians(fromGpsCoords.latitude)) *
-  Math.cos(toRadians(toGpsCoords.latitude))*Math.cos(toRadians(toGpsCoords.longitude - fromGpsCoords.longitude)); 
-  var brng = Math.atan2(y, x); 
-  brng = brng * 180 / Math.PI; 
-  return brng;
+  var y = Math.sin(toRadians(toPosition.coords.longitude - fromPosition.coords.longitude)) * Math.cos(toRadians(toPosition.coords.latitude)); 
+  var x = Math.cos(toRadians(fromPosition.coords.latitude)) * Math.sin(toRadians(toPosition.coords.latitude)) - Math.sin(toRadians(fromPosition.coords.latitude)) *
+    Math.cos(toRadians(toPosition.coords.latitude))*Math.cos(toRadians(toPosition.coords.longitude - fromPosition.coords.longitude)); 
+    
+  var dblBearing = Math.atan2(y, x); 
+  
+  return toDegrees(dblBearing);
 };
 
 function toDegrees (angle) 
