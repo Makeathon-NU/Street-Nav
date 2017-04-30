@@ -1,8 +1,14 @@
 // Distance in feet to speak approaching street.
 var m_dblApproachDistanceKm = convertFTtoKM(200.0);
 
+var m_bSpeakLocation = false;
+
 // Intersection history, last X items.
 var m_aryIntersectionHistory = new Array();
+
+// Position history, last X items.
+var m_aryPositionHistory = new Array();
+var m_iDirectionTimeMs = 10000;
 
 var m_strLastIntersection = "";
 var m_strLastAddress = "";
@@ -46,6 +52,7 @@ $(document).ready(function()
 {		
   document.getElementById('edAddressTimeout').value = Number(m_iAddrFrequencyMs / 1000).toFixed(1);
   document.getElementById('edIntersectionTimeout').value = Number(m_iIntersectionFrequencyMs / 1000).toFixed(1);
+  document.getElementById('edDirectionTime').value = Number(m_iDirectionTimeMs / 1000).toFixed(1);
   document.getElementById('edIntersectionApproach').value = Number(convertKMtoFT(m_dblApproachDistanceKm)).toFixed(1);
     
   if('speechSynthesis' in window) 
@@ -101,6 +108,7 @@ $(document).ready(function()
     e.preventDefault();
 
     SpeakText("Location");
+    m_bSpeakLocation = true;
     
     m_strLastAddress = "";
     
@@ -111,6 +119,7 @@ $(document).ready(function()
   {
     m_iIntersectionFrequencyMs = Math.max(document.getElementById('edIntersectionTimeout').value * 1000, 1500);
     m_iAddrFrequencyMs = document.getElementById('edAddressTimeout').value * 1000;
+		m_iDirectionTimeMs = Math.max(document.getElementById('edDirectionTime').value * 1000, 5000);
     if(m_idFollowStreets != 0)
     {
       StopFollowingStreets();
@@ -125,35 +134,68 @@ $(document).ready(function()
 
 function OnGetGeoCoordinates(position)
 {
-  if(position.coords.speed
-  || position.coords.heading)
+  var lastPosition = null;
+  if(m_aryPositionHistory.length > 0)
   {
+		 lastPosition = m_aryPositionHistory[m_aryPositionHistory.length - 1];
+    if(lastPosition.coords.latitude != position.coords.latitude
+      && lastPosition.coords.longitude != position.coords.longitude)
+    {
+      if(m_aryPositionHistory.length > 20)
+      {
+        m_aryPositionHistory.shift();
+      }
+  
+      m_aryPositionHistory.push(position);
+    }
+  }
+  else
+  {
+    m_aryPositionHistory.push(position);
+  }  
+  
+  var dblBearing = null;
+  
+  if(position.coords.heading)
+  {
+    dblBearing = position.coords.heading;
+  }
+  else
+  {
+    dblBearing = GetBearingFromPositions(m_aryPositionHistory, m_iDirectionTimeMs);
+  }
+  if(dblBearing)
+  {
+    if(dblBearing < 0)
+    {
+      dblBearing += 360.0;
+    }
     var strDirection = "";
-    if(position.coords.heading < 23 || position.coords.heading > 337)
+    if(dblBearing < 23 || dblBearing > 337)
     {
       strDirection = "N";
     }
-    else if(position.coords.heading < 67)
+    else if(dblBearing < 67)
     {
       strDirection = "NE";
     }
-    else if(position.coords.heading < 113)
+    else if(dblBearing < 113)
     {
       strDirection = "E";
     }
-    else if(position.coords.heading < 157)
+    else if(dblBearing < 157)
     {
       strDirection = "SE";
     }
-    else if(position.coords.heading < 203)
+    else if(dblBearing < 203)
     {
       strDirection = "S";
     }
-    else if(position.coords.heading < 248)
+    else if(dblBearing < 248)
     {
       strDirection = "SW";
     }
-    else if(position.coords.heading < 293)
+    else if(dblBearing < 293)
     {
       strDirection = "W";
     }
@@ -162,7 +204,9 @@ function OnGetGeoCoordinates(position)
       strDirection = "NW";
     }
     
-    document.getElementById('tdSpeedDirection').value = position.coords.speed.toString() + " m/s " + strDirection;
+    document.getElementById('tdSpeedDirection').innerHTML = strDirection;
+    
+    console.log(dblBearing);
   }
   
   document.getElementById('edDebug').value += "lat: " + position.coords.latitude.toString() + " lng: " + position.coords.longitude.toString() + " acc: " + Number(convertKMtoFT(position.coords.accuracy / 1000)).toFixed(3) + ' ft\n';
@@ -195,6 +239,15 @@ function OnGetCurrentLocation(response)
     //document.getElementById('edCurrentLocation').value = response.responseText;
     
     var jsonObj = JSON.parse(response.responseText);
+		
+		if(!jsonObj.address)
+    {
+      if(jsonObj.status && jsonObj.status.message)
+      {
+        alert(jsonObj.status.message);
+        return;
+      }
+    }
   
     var strFullAddress = jsonObj.address.streetNumber + " " + jsonObj.address.street;
     strFullAddress += "<br />" + jsonObj.address.placename + ", " + jsonObj.address.adminName1 + " " + jsonObj.address.postalcode;
@@ -203,11 +256,12 @@ function OnGetCurrentLocation(response)
     
     document.getElementById('edDebug').value += "addr: " + jsonObj.address.streetNumber + " " + jsonObj.address.street + '\n';
     
-    if((jsonObj.address.streetNumber + " " + jsonObj.address.street) != m_strLastAddress)
+    if(m_bSpeakLocation)
     {
       // Get the street number and street to send to the speech synthesizer.
       SpeakText(jsonObj.address.streetNumber + " " + jsonObj.address.street);
       m_strLastAddress = jsonObj.address.streetNumber + " " + jsonObj.address.street;
+			m_bSpeakLocation = false;
     }
   }
 };
@@ -222,6 +276,10 @@ function OnGetNearestIntersection(response)
   
     if(!jsonObj.intersection)
     {
+			if(jsonObj.status && jsonObj.status.message)
+      {
+        alert(jsonObj.status.message);
+      }
       return;
     }
   
@@ -257,3 +315,36 @@ function convertFTtoKM(dblFT)
 {
   return dblFT / 3280.84;
 };
+function GetBearingFromPositions(aryPositionHistory, iMilliseconds)
+{
+  if(aryPositionHistory.length <= 1)
+  {
+    // Not enough information for a bearing
+    return;
+  }
+  var toPosition = aryPositionHistory[aryPositionHistory.length - 1];
+  var fromPosition = null;
+  var iRecentTimeMs = toPosition.timestamp;
+  
+  for(i = aryPositionHistory.length - 2; i >= 0; i--)
+  {
+    if(toPosition.timestamp - aryPositionHistory[i].timestamp <= iMilliseconds)
+    {
+      fromPosition = aryPositionHistory[i];
+    }
+    else
+    {
+      break;
+    }
+  }
+  
+  fromPosition = aryPositionHistory[0];
+  
+  if(!fromPosition)
+  {
+    // Too old of a position to use for the bearing.
+    return;
+  }
+  
+  return GetBearing(fromPosition, toPosition);
+};	
