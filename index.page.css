@@ -2,6 +2,7 @@ body
 {
   font-size: 6.25em;
   font-weight: bold;
+  font-family: arial;
 }
 
 input
@@ -10,12 +11,14 @@ input
   width: 100%;
   font-size: inherit;
   font-weight: inherit;
+  font-family: arial;
 }
 
 input[type=button]
 {
   background-color:#CC99FF;
   margin: .05em;
+  font-family: arial;
 }
 
 input[type=text]
@@ -29,6 +32,7 @@ input[type=number]
   width: 3em;
   height: 80%;
   text-align: center;
+  font-family: arial;
 }
 
 hr {
@@ -38,6 +42,7 @@ hr {
 
 div#min {
   text-align: center;
+  font-family: arial;
 }
 
 input#btnApplySettings {
@@ -47,6 +52,7 @@ input#btnApplySettings {
 p {
   font-size: .4em;
   margin-bottom: 0;
+  font-family: arial;
 }
 
 
