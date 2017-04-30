@@ -4,4 +4,4 @@ Designed to assist people with visual impairment navigate city streets easier. M
 
 This web application utilizes GPS data and reads aloud street intersections and locations. 
 
-Test Site: https://joecummings.github.io/Street-Nav/
+Test Site: https://darcy-makeathon.github.io/Street-Nav/
