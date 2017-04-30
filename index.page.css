@@ -15,6 +15,7 @@ input
 input[type=button]
 {
   background-color:#CC99FF;
+  margin: 10px;
 }
 
 input[type=text]
