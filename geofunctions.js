@@ -47,7 +47,7 @@ function GetGeoCoordinates()
       OnUseCurrentPosition(m_geoLastCoordinates);
     }
   
-    navigator.geolocation.getCurrentPosition(successGetCurrentPosition, errorGetCurrentPosition, {maximumAge: 20000, timeout:5000, enableHighAccuracy: true});
+   navigator.geolocation.getCurrentPosition(successGetCurrentPosition, errorGetCurrentPositionAccurate, {maximumAge: 20000, timeout:5000, enableHighAccuracy: true});
   }
   else 
   { 
