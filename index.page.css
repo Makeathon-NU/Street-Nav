@@ -20,6 +20,7 @@ input#btnFollowStreets {
   width: inherit;
   border: 2px;
   width: 100%;
+  margin-bottom: 4px;
 }
 
 input#btnCurrentLocation {
