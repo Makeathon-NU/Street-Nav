@@ -6,7 +6,7 @@ body
 
 input
 {
-  height: 250px;
+  height: 325px;
   width: 100%;
   font-size: inherit;
   font-weight: inherit;
@@ -40,8 +40,8 @@ div#min {
   text-align: center;
 }
 
-div#most {
-  height:300px;
+input#btnApplySettings {
+  height: 225px;
 }
 
 p {
