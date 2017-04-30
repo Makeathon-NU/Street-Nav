@@ -18,16 +18,16 @@ input#btnFollowStreets {
   background-color: #000;
   background: url(https://s3.us-east-2.amazonaws.com/joe-random/2000px-Solid_white.svg.png) no-repeat right top;
   width: inherit;
-  border: 2px;
+  border-style: solid 2px;
   width: 100%;
-  margin-bottom: 4px;
+  margin-bottom: 10px;
 }
 
 input#btnCurrentLocation {
   background-color: #000;
   background: url(https://s3.us-east-2.amazonaws.com/joe-random/2000px-Solid_white.svg.png) no-repeat right top;
   width: 100%;
-  border: 2px;
+  border-style: solid 4px;
 }
 
 input#btnApplySettings {
@@ -35,6 +35,7 @@ input#btnApplySettings {
   background: url(https://s3.us-east-2.amazonaws.com/joe-random/2000px-Solid_white.svg.png) no-repeat right top;
   height: 2.7em;
   width: 100%;
+  border-style: solid 4px;
 }
 
 input[type=button]
