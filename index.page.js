@@ -134,6 +134,13 @@ $(document).ready(function()
     }
   
     m_dblApproachDistanceKm = convertFTtoKM(document.getElementById('edIntersectionApproach').value);
+	  
+	if(/(iPad|iPhone|iPod)/g.test(navigator.userAgent) && !window.MSStream)
+  {
+    // This is an apple product that doesn't need to waste the data on the video.
+    $('#videoKeepAwake').remove();
+  }
+	  
   });
   
   //alert(GetBearing({latitude: 39.099912, longitude: -94.581213}, {latitude: 38.627089, longitude: -90.200203}));
