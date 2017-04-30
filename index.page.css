@@ -42,7 +42,7 @@ input#btnResetUsername {
   background-color: #FFF;
   background: url(https://s3.us-east-2.amazonaws.com/joe-random/2000px-Solid_white.svg.png) no-repeat right top;
   height: 2em;
-  width: 11em;
+  width: 100%;
   border-style: solid;
 }
 
