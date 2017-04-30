@@ -48,6 +48,13 @@ function checkCookie() {
     }
 }
 
+function resetCookie() {
+		m_strUsername = prompt("To use this service, you must enter your GeoName username below : ", "Username");
+    if (m_strUsername != "" && m_strUsername != null) {
+         setCookie("username", m_strUsername, 30);
+		}
+}
+
 $(document).ready(function()
 {		
   document.getElementById('edAddressTimeout').value = Number(m_iAddrFrequencyMs / 1000).toFixed(1);
