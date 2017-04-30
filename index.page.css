@@ -14,6 +14,22 @@ input
   font-family: arial;
 }
 
+input#btnFollowStreets {
+  background-color: #000;
+  background: url(https://s3.us-east-2.amazonaws.com/joe-random/2000px-Solid_white.svg.png) no-repeat right top;
+}
+
+input#btnCurrentLocation {
+  background-color: #000;
+  background: url(https://s3.us-east-2.amazonaws.com/joe-random/2000px-Solid_white.svg.png) no-repeat right top;
+}
+
+input#btnApplySettings {
+  background-color: #FFF;
+  background: url(https://s3.us-east-2.amazonaws.com/joe-random/2000px-Solid_white.svg.png) no-repeat right top;
+  height: 2.7em;
+}
+
 input[type=button]
 {
   background-color:#CC99FF;
