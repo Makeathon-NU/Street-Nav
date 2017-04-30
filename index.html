@@ -34,15 +34,19 @@
 </table>
 </div>
 <hr />
-  <div id="min"><label>Update My Location Every <input type="number" name="addressTimeout" id="edAddressTimeout" /> Seconds</label><hr /></div>
-  <div id="min"><label>Speak Intersection Within <input type="number" name="intersectionApproach" id="edIntersectionApproach" /> Feet</label><hr /></div>
+
+<div id="min"><label>Update My Location Every <input type="number" name="addressTimeout" id="edAddressTimeout" /> Seconds</label><hr /></div>
+<div id="min"><label>Speak Intersection Within <input type="number" name="intersectionApproach" id="edIntersectionApproach" /> Feet</label><hr /></div>
 <div id="min"><label>Look for New Intersection Every <input type="number" name="intersectionTimeout" id="edIntersectionTimeout" /> Seconds</label><hr /></div>
+<div><label>Check for Direction Over Past X Seconds:</label> <input type="number" name="directionTime" id="edDirectionTime" /></div>
 <div id="most"><input type="button" name="applySettings" value="Apply Settings" id="btnApplySettings" /></div>
 
 <br />
   <div id="min"><p>Debug Information:</p><textarea id="edDebug" rows="4"></textarea></div>
   <div id="min"><p>Error Information:</p><textarea id="edError" rows="4"></textarea></div>
 
+<video src="https://rawgit.com/bower-media-samples/big-buck-bunny-480p-30s/master/video.mp4" playsinline muted autoplay loop height=0></video>
+  
 <script type="text/javascript" src="jquery-3.2.1.min.js"></script>
 <script type="text/javascript" src="geofunctions.js"></script>
 <script type="text/javascript" src="index.page.js"></script>
