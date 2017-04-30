@@ -6,7 +6,7 @@ body
 
 input
 {
-  height: 200px;
+  height: 250px;
   width: 100%;
   font-size: inherit;
   font-weight: inherit;
@@ -25,8 +25,14 @@ input[type=text]
 input[type=number]
 {
   background-color: #FFFF99;
-  width: 305px;
+  width: 300px;
   height: 80%;
+  text-align: center;
+}
+
+hr {
+  height: 2px;
+  background-color: black;
 }
 
 div#min {
