@@ -1,4 +1,21 @@
-﻿function SpeakText(strText)
+/**
+ * TextToSpeech.js
+ * Contains functions for text to speech.
+ *
+ * Made for TOM Makeathon at Northwestern University
+ *
+ * @license MIT license
+ * @version 1.0
+ * @author  Daniel Bednarczyk, Darcy Green (Need Knower), Joe Cummings, Julie Davies, Megan Reid, Wong Song Wei
+ * @updated 2017-05-16
+ * @link    https://makeathon-nu.github.io/Street-Nav/
+ *
+ * If text to speech isn't working:
+ *  Turn the ringer on. iOS needs the ringer on for text to speech.
+ *  
+ */
+
+function SpeakText(strText)
 {
   // Cancel prior speech
   window.speechSynthesis.cancel();
