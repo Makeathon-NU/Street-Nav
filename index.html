@@ -1,54 +1,85 @@
-﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
 
-<title>Street Navigation for Visually Impaired</title>  
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>Street Navigation</title>  
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+
+<meta name="author" content="Made for TOM Makeathon at Northwestern University by Daniel Bednarczyk, Darcy Green (Need Knower), Joe Cummings, Julie Davies, Megan Reid, Wong Song Wei" />
+<meta name="description" content="Designed to assist people with visual impairment navigate city streets easier." />
 
 <link rel="stylesheet" type="text/css" href="index.page.css" />
   
 </head>
 
-<body onload="checkCookie()">
-
-<div><input type="button" name="follow" value="Start" id="btnFollowStreets" /></div> 
-<div><input type="button" name="location" value="My Location" id="btnCurrentLocation" /></div>
-  
-<hr />
-<div>
-<table>
-<tr>
-  <td>Intersection</td>
-  <td id="tdIntersection"></td>
-</tr>
-<tr>
-  <td>Address</td>
-  <td id="tdAddress"></td>
-</tr>
-<tr>
-  <td>Direction</td>
-  <td id="tdSpeedDirection"></td>
-</tr>
-</table>
+<body>
+<div class="container" id="username_container">
+  <div><label>Please enter your GeoName username: <input type="text" name="username" id="edUsername" /></label></div>
+  <div><hr />By clicking the Submit button, you are agreeing to the <a href="#terms_of_use" id="spanDisclaimer">terms of use</a>.</div>
+  <div class="credit">Data rates may apply.</div>
+  <input type="button" name="submitUsername" id="submitUsername" value="Submit" />
+  <div>If you do not have a GeoName username, create a free one <a href="http://www.geonames.org/login" target="_blank">here</a>.</div>
+  <hr />
+  <div id="terms_of_use">
+    This data is provided for free without cost.<br />
+    The data is provided "as is" without warranty or any representation of accuracy, timeliness or completeness.<br />
+    Data rates may apply.
+  </div>
 </div>
-<hr />
 
-<div id="min"><label>Update My Location Every <input type="number" name="addressTimeout" id="edAddressTimeout" /> Seconds</label><hr /></div>
-<div id="min"><label>Speak Intersection Within <input type="number" name="intersectionApproach" id="edIntersectionApproach" /> Feet</label><hr /></div>
-<div id="min"><label>Look for New Intersection Every <input type="number" name="intersectionTimeout" id="edIntersectionTimeout" /> Seconds</label><hr /></div>
-<div id="min"><label>Check for Direction Over Past <input type="number" name="directionTime" id="edDirectionTime" /> Seconds</label><hr /> </div>
-<div><input type="button" name="applySettings" value="Apply Settings" id="btnApplySettings" /></div><hr />
-  <div id="min"><label>Having trouble?</label><input type="button" name="resetUsername" value="Reset Your Username" onclick="resetCookie()" id="btnResetUsername"/></div>
+<div class="container" id="main_container">
+  <div><input type="button" name="follow" value="Start" id="btnFollowStreets" /></div> 
+  <div><input type="button" name="location" value="My Location" id="btnCurrentLocation" /></div>
+  
+  <hr />
+  <div>
+    <table>
+      <tr>
+        <th>Intersection</th>
+      </tr>
+      <tr>
+        <td id="tdIntersection"></td>
+      </tr>
+      <tr>
+        <th>Address</th>
+      </tr>
+      <tr>
+        <td id="tdAddress"></td>
+      </tr>
+      <tr>
+        <th>Direction</th>
+      </tr>
+      <tr>
+        <td id="tdSpeedDirection"></td>
+      </tr>
+    </table>
+  </div>
+  <hr />
 
-  <div id="min" hidden><p>Debug Information:</p><textarea id="edDebug" rows="4"></textarea></div>
-  <div id="min" hidden><p>Error Information:</p><textarea id="edError" rows="4"></textarea></div>
+  <div class="numSetting"><label><input type="checkbox" name="checkInternational" id="ckInternational" /> Outside the USA<br />(Intersection Only)</label><hr /></div>
+  <div class="numSetting"><label>Update My Location Every <input type="number" name="addressTimeout" id="edAddressTimeout" size="1" /> Seconds</label><hr /></div>
+  <div class="numSetting"><label>Speak Intersection Within <input type="number" name="intersectionApproach" id="edIntersectionApproach" /> Feet</label><hr /></div>
+  <div class="numSetting"><label>Look for New Intersection Every <input type="number" name="intersectionTimeout" id="edIntersectionTimeout" /> Seconds</label><hr /></div>
+  <div class="numSetting"><label>Check for Direction Over Past <input type="number" name="directionTime" id="edDirectionTime" /> Seconds</label><hr /> </div>
+  <div><input type="button" name="applySettings" value="Apply Settings" id="btnApplySettings" /></div><hr />
 
-<video id="videoKeepAwake" src="android_awake.mp4" playsinline muted autoplay loop height=0></video>
+  <div class="numSetting"><label>Having Trouble?</label><br /><input type="button" name="resetUsername" value="Reset Your Username" id="btnResetUsername"/></div>
+
+  <div class="numSetting debug">Debug Information:<br /><textarea id="edDebug" rows="4"></textarea></div>
+  <div class="numSetting debug">Error Information:<br /><textarea id="edError" rows="4"></textarea></div>
+  
+  <!-- On Android, the following line will keep the screen on
+  <video id="videoKeepAwake" src="android_awake.mp4" playsinline muted autoplay loop height=0></video>
+  -->
+</div>
+
+<div class="credit">Powered by <a href="http://www.geonames.org/" target="_blank">GeoNames</a>.</div>
   
 <script type="text/javascript" src="jquery-3.2.1.min.js"></script>
 <script type="text/javascript" src="geofunctions.js"></script>
+<script type="text/javascript" src="AddrSuffixTable.js"></script>
 <script type="text/javascript" src="index.page.js"></script>
 <script type="text/javascript" src="TextToSpeech.js"></script>
 </body>
