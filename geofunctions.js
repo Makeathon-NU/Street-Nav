@@ -1,4 +1,37 @@
-﻿// Id returned by setTimeout to regularly check for intersections.
+/**
+ * geofunctions.js
+ * Contains functions for getting geo coordinates and uses the api from geonames.org
+ *
+ * geonames.org international geocoder is using google geocoder, 
+ * reverse geocoding is provided by geonames using openstreemap data 
+ * (Feb 2014) under a cc by-sa license.
+ *  
+ * Powered by geonames.org under a cc by license.
+ *
+ * Made for TOM Makeathon at Northwestern University
+ *
+ * @license MIT license
+ * @version 1.0
+ * @author  Daniel Bednarczyk, Darcy Green (Need Knower), Joe Cummings, Julie Davies, Megan Reid, Wong Song Wei
+ * @updated 2017-05-16
+ * @link    https://makeathon-nu.github.io/Street-Nav/
+ *
+ * If address or intersection aren't working:
+ *  Be sure that the username is entered correctly, capitalization matters.
+ *  GPS must be enabled for the app or web browser on the device.
+ *  Try clearing the cache for the web browser.
+ *  Allow the browser to know your location.
+ *
+ * Callback functions:
+ *  OnGetGeoCoordinates(position)
+ *  OnGetCurrentPositionError(positionError)
+ *  OnWatchPositionError(positionError)
+ *  OnGetCurrentLocation(response)
+ *  OnGetNearestIntersection(response)
+ *  
+ */
+
+// Id returned by setTimeout to regularly check for intersections.
 var m_idFollowStreets = 0;
 
 // Id returned by setTimeout to regularly check for addresses.
@@ -7,16 +40,23 @@ var m_idFollowAddress = 0;
 // Username to use for geonames.org
 var m_strUsername = "";
 
-// Waiting for Geo Coordinates, one request is outstanding if true.
+// Waiting for GeoNames to return with the current address, one request is outstanding if true.
 // Don't want more than one outstanding call to it.
-var m_bCoordWaiting = false;
+var m_bAddressWaiting = false;
+
+// Waiting for GeoNames to return with the nearest intersection, one request is outstanding if true.
+// Don't want more than one outstanding call to it.
+var m_bIntersectionWaiting = false;
 
 // Granularity for requesting coordinates when following streets in milliseconds.
-// Defaults to the minimum of 1.8 seconds.  geonames.org allows 2000 credits an hour.
+// geonames.org allows 2000 credits an hour, which equates to one every 1.8 seconds.
 var m_iIntersectionFrequencyMs = 3000;
 
 // Granularity for requesting coordinates when following address in milliseconds.
 var m_iAddrFrequencyMs = 10000;
+
+// Use international api, non-United States
+var m_bInternational = false;
 
 // This is set to get the current location after getting the coordinates response.
 var m_bGetCurrentLocation = false;
@@ -35,7 +75,7 @@ var m_idWatchPosition = 0;
 */
 function GetGeoCoordinates()
 {
-  if (navigator.geolocation) 
+  if(navigator.geolocation) 
   {
     var date = new Date();
     
@@ -44,10 +84,13 @@ function GetGeoCoordinates()
       && m_geoLastCoordinates.coords.longitude != 0
       && date.getTime() - m_geoLastCoordinates.timestamp <= 10000)
     {
+      // Use the last coordinates, they are less than 10 seconds old.
       OnUseCurrentPosition(m_geoLastCoordinates);
+      return;
     }
   
-   navigator.geolocation.getCurrentPosition(successGetCurrentPosition, errorGetCurrentPositionAccurate, {maximumAge: 20000, timeout:5000, enableHighAccuracy: true});
+    // We don't have a coordinate in the last 10 seconds, try to get one now.
+    navigator.geolocation.getCurrentPosition(successGetCurrentPosition, errorGetCurrentPositionAccurate, {maximumAge: 20000, timeout:5000, enableHighAccuracy: true});
   }
   else 
   { 
@@ -55,71 +98,94 @@ function GetGeoCoordinates()
   }
 }
 
+/**
+  Success function for getCurrentPosition
+*/
 function successGetCurrentPosition(position)
 {
+  // Use the coordinates returned.
   OnUseCurrentPosition(position);
 };
 
+/**
+  Error function for getCurrentPosition when using enableHighAccuracy: false.
+*/
 function errorGetCurrentPositionLessAccurate(positionError)
 {
-  if(positionError.code == 3
-    && m_bGetCurrentLocation)
-  {
-    // Keep trying to get the location.
-//    GetCurrentLocation();
-  }
-  
+  // Pass the error onto the GUI 
   OnGetCurrentPositionError(positionError);
 };
 
+/**
+  Error function for getCurrentPosition when using enableHighAccuracy: true.
+*/
 function errorGetCurrentPositionAccurate(positionError)
 {
   // Try the less accurate getCurrentPosition.
   navigator.geolocation.getCurrentPosition(successGetCurrentPosition, errorGetCurrentPositionLessAccurate, {maximumAge: 20000, timeout:5000, enableHighAccuracy: false});
 }
 
+/**
+  Success function for watchPosition
+*/
 function successWatchPosition(position)
 {
+  // Save the last coordinates
   m_geoLastCoordinates = position;
-
-  OnUseCurrentPosition(m_geoLastCoordinates);
+  
+  // See if there is anything to do with the coordinates
+  OnUseCurrentPosition(position);
 };
 
+/**
+  Error function for watchPosition when using enableHighAccuracy: true.
+*/
 function errorWatchPosition(positionError)
 {
   if(m_idWatchPosition != 0)
   {
+    // Stop watching and start again
     navigator.geolocation.clearWatch(m_idWatchPosition);
     m_idWatchPosition = navigator.geolocataion.watchPosition(successWatchPosition, errorWatchPosition, {maximumAge: 20000, timeout:10000, enableHighAccuracy: true});
   }
 
+  // Pass the error onto the GUI.
   OnWatchPositionError(positionError);
 };
 
+/**
+  Operate on the coordinates given
+*/
 function OnUseCurrentPosition(position)
 {
   if(m_bGetCurrentLocation)
   {
+    // Get the current address
     GetCurrentLocation(position.coords.latitude, position.coords.longitude);
     m_bGetCurrentLocation = false;
   } 
+  
   if(m_bGetNearestIntersection)
   {
+    // Get the nearest intersection
     GetNearestIntersection(position.coords.latitude, position.coords.longitude);
     m_bGetNearestIntersection = false;
   }
-      
+  
+  // Pass the coordinates onto the GUI.
   OnGetGeoCoordinates(position);
 };
 
 /*
-  Create OnGetCurrentLocation(response) to receive the response and act on it.
+  Get the current address.
+  If no coordinates are given, get coordinates.
 */
 function GetCurrentLocation(dblLatitude, dblLongitude)
 {
   if(arguments.length == 0
     || (dblLatitude == 0 && dblLongitude == 0))
   {
+    // Get coordinates and get the current location using them.
     m_bGetCurrentLocation = true;
     GetGeoCoordinates();
     
@@ -132,104 +198,169 @@ function GetCurrentLocation(dblLatitude, dblLongitude)
     if(this.readyState == 4)
     {
       // Request is finished.
-      m_bCoordWaiting = false;
+      m_bAddressWaiting = false;
     }
     
+    // Pass the current location information onto the GUI.
     OnGetCurrentLocation(this);
   };
 
-  m_bCoordWaiting = true;
+  if(m_bAddressWaiting)
+  {
+    // There is already an outstanding call for the current address
+    return;
+  }
+
+  // Request the current address.
+  m_bAddressWaiting = true;
   xhttp.open("GET", "https://secure.geonames.org/findNearestAddressJSON?lat=" + dblLatitude.toString() + "&lng=" + dblLongitude.toString() + "&username=" + m_strUsername, true);
   xhttp.send();
 };
 
 /*
-  Create OnGetNearestIntersection(response) to receive the response and act on it.
+  Get the nearest intersection.
+  If no coordinates are given, get coordinates.
 */
 function GetNearestIntersection(dblLatitude, dblLongitude)
 {
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() 
   {
+    // Pass the nearest intersection information onto the GUI.
+    if(this.readyState == 4)
+    {
+      // Request is finished.
+      m_bIntersectionWaiting = false;
+    }
+
     OnGetNearestIntersection(this);
   };
+  
+  if(m_bIntersectionWaiting)
+  {
+    // There is already an outstanding call for the nearest intersection
+    return;
+  }
 
-  xhttp.open("GET", "https://secure.geonames.org/findNearestIntersectionJSON?lat=" + dblLatitude.toString() + "&lng=" + dblLongitude.toString() + "&username=" + m_strUsername, true);
+  // Request the nearest intersection
+  m_bIntersectionWaiting = true;
+  if(m_bInternational)
+  {
+    xhttp.open("GET", "https://secure.geonames.org/findNearestIntersectionOSMJSON?lat=" + dblLatitude.toString() + "&lng=" + dblLongitude.toString() + "&username=" + m_strUsername, true);
+  }
+  else
+  {
+    xhttp.open("GET", "https://secure.geonames.org/findNearestIntersectionJSON?lat=" + dblLatitude.toString() + "&lng=" + dblLongitude.toString() + "&username=" + m_strUsername, true);
+  }
   xhttp.send();
 };
 
+/**
+  Start following the street intersections
+*/
 function StartFollowingStreets()
 {
   if(m_idFollowStreets != 0)
   {
+    // Already following street intersections
     return;
   }
   
+  // Start a timer for intersections
   m_idFollowStreets = setInterval(OnFollowStreetsTimer, m_iIntersectionFrequencyMs);
   
   if(m_iAddrFrequencyMs != 0)
   {
+    // Start a timer for the address
     m_idFollowAddress = setInterval(OnFollowAddressTimer, m_iAddrFrequencyMs);
   }
   
   if(m_idWatchPosition == 0)
   {
+    // Start getting coordinates regularly
     m_idWatchPosition = navigator.geolocation.watchPosition(successWatchPosition, errorWatchPosition, {maximumAge: 20000, timeout:10000, enableHighAccuracy: true});
   }
 
   if(m_iAddrFrequencyMs != 0)
   {  
+    // Set to get the address
     m_bGetCurrentLocation = true;
   }
     
+  // Set to get the intersection
   m_bGetNearestIntersection = true;
+  
+  // Get the first coordinates
   GetGeoCoordinates();
 };
 
+/**
+  Stop following the street intersections
+*/
 function StopFollowingStreets()
 {
+  // Clear address and intersection timers
   clearTimeout(m_idFollowStreets);
   clearTimeout(m_idFollowAddress);
+  
+  // Stop getting coordinates
   navigator.geolocation.clearWatch(m_idWatchPosition);
   
+  // Reset all id's and variables
   m_idFollowStreets = 0;
   m_idFollowAddress = 0;
   m_idWatchPosition = 0;
   m_bGetNearestIntersection = false;
   m_bGetCurrentLocation = false;
 
+  // Reset last coordinates
   m_geoLastCoordinates = null;
 };
 
+/**
+  Timer function for street intersections
+*/
 function OnFollowStreetsTimer()
 {
+  // Set to get the intersection
   m_bGetNearestIntersection = true;
 
-  if(m_bCoordWaiting
+  if(m_bIntersectionWaiting
     || m_idFollowStreets == 0)
   {
     // Don't put another request in or we no longer want it.
     return;  
   }
   
+  // Use current coordinates or get new ones
   GetGeoCoordinates();
 };
 
+/**
+  Timer function for current address
+*/
 function OnFollowAddressTimer()
 {
+  // Set to get the address
   m_bGetCurrentLocation = true;
 
-  if(m_bCoordWaiting
+  if(m_bAddressWaiting
     || m_idFollowAddress == 0)
   {
     // Don't put another request in or we no longer want it.
-    // Make sure we use the next coordinates we get.
     return;
   }
   
+  // Use current coordinates or get new ones
   GetGeoCoordinates();
 };
 
+/**
+  Get the bearing from one coordinate to another
+  
+  Formula:  θ = atan2( sin Δλ ⋅ cos φ2 , cos φ1 ⋅ sin φ2 − sin φ1 ⋅ cos φ2 ⋅ cos Δλ )
+    where  φ1,λ1 is the start point, φ2,λ2 the end point (Δλ is the difference in longitude)
+*/
 function GetBearing(fromPosition, toPosition)
 {
   if(!fromPosition || !toPosition)
@@ -246,22 +377,18 @@ function GetBearing(fromPosition, toPosition)
   return toDegrees(dblBearing);
 };
 
-function toDegrees (angle) 
+/**
+  Convert Radians to Degrees
+*/
+function toDegrees(angle) 
 { 
   return angle * (180 / Math.PI); 
 };
 
-function toRadians (angle) 
+/**
+  Convert Degrees to Radians
+*/
+function toRadians(angle) 
 { 
   return angle * (Math.PI / 180);
-};
-
-function bearing(la1, lo1, la2, lo2)
-{
-  var y = Math.sin(toRadians(lo2-lo1)) * Math.cos(toRadians(la2)); 
-  var x = Math.cos(toRadians(la1)) * Math.sin(toRadians(la2)) - Math.sin(toRadians(la1)) *
-  Math.cos(toRadians(la2))*Math.cos(toRadians(lo2-lo1)); 
-  var brng = Math.atan2(y, x); 
-  brng = brng * 180 / Math.PI; 
-  return brng;
 };
