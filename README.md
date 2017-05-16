@@ -1,6 +1,6 @@
 # Street-Navigation
 
-Designed to assist people with visual impairment navigate city streets easier. 
+Helps visually impaired users to navigate city streets. Announces intersections while walking.
 
 Made originally for TOM Makeathon at Northwestern University by Daniel Bednarczyk, Darcy Green (Need Knower), Joe Cummings, Julie Davies, Megan Reid, Wong Song Wei.
 
