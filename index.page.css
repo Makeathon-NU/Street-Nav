@@ -3,86 +3,121 @@ body
   font-size: 6.25em;
   font-weight: bold;
   font-family: arial;
+  padding-top: .4em;
 }
 
 input
 {
-  height: 4em;
-  width: 100%;
   font-size: inherit;
   font-weight: inherit;
-  font-family: arial;
+  font-family: inherit;
+  background-color: #FFFF99;
+}
+
+input:hover
+{
+  cursor: pointer;
+  cursor: hand;
 }
 
 input[type=button]
 {
-  margin: .08em;
+  height: 3em;
+  margin: .1em;
+  width: 99%;
 }
 
-input#btnFollowStreets {
-  background-color: #000;
-  background: url(https://s3.us-east-2.amazonaws.com/joe-random/2000px-Solid_white.svg.png) no-repeat right top;
-  border-style: solid;
-}
-
-input#btnCurrentLocation {
-  background-color: #000;
-  background: url(https://s3.us-east-2.amazonaws.com/joe-random/2000px-Solid_white.svg.png) no-repeat right top;
-  border-style: solid;
-}
-
-input#btnApplySettings {
-  background-color: #FFF;
-  background: url(https://s3.us-east-2.amazonaws.com/joe-random/2000px-Solid_white.svg.png) no-repeat right top;
-  height: 2.7em;
-  border-style: solid;
-}
-
-input#btnResetUsername {
-  background-color: #FFF;
-  background: url(https://s3.us-east-2.amazonaws.com/joe-random/2000px-Solid_white.svg.png) no-repeat right top;
-  height: 2em;
-  width: 100%;
-  border-style: solid;
-  font-size: .7em;
-}
-
-input[type=text]
+input[type=checkbox]
 {
-  background-color: #FFFF99;
+  height: .7em;
+  width: .7em;
+}
+
+input#btnApplySettings 
+{
+  height: 2.7em;
+}
+
+input#btnResetUsername 
+{
+  height: 2em;
+  font-size: .7em;
 }
 
 input[type=number]
 {
-  background-color: #FFFF99;
   width: 3em;
   height: 80%;
   text-align: center;
 }
 
-hr {
+hr 
+{
   height: 2px;
   background-color: black;
 }
 
-div#min {
+div.numSetting
+{
   text-align: center;
-  font-family: arial;
 }
 
-p {
+div.debug
+{
   font-size: .4em;
   margin-bottom: 0;
 }
 
+div.credit
+{
+  font-size: .4em;
+  color: gray;
+  text-align: center;
+  padding-top: .7em;
+}
+
+div#terms_of_use
+{
+  font-size: .4em;
+  text-align: left;
+}
+
+div#username_container
+{
+  text-align: center;
+}
+
+div.container
+{
+  width: 99%;
+}
+
+.debug
+{
+  display:none;
+}
+
+textarea
+{
+  font-size: .7em;
+  width:80%;
+}
+
 table
 {
-  width: 100%;
+  width: 99%;
   border: 1px solid black;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 table td
 {
   width: 50%;
   border: 1px solid black;
+}
+
+table th
+{
+  background-color: #f9d2f9;
 }
