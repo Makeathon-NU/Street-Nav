@@ -4,6 +4,12 @@ Helps visually impaired users to navigate city streets. Announces intersections 
 
 Made originally for TOM Makeathon at Northwestern University by Daniel Bednarczyk, Darcy Green (Need Knower), Joe Cummings, Julie Davies, Megan Reid, Wong Song Wei.
 
+<p align="center">
+<img src="https://github.com/Makeathon-NU/Street-Nav/blob/master/StreetNav.PNG" height=400></img>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<img src="https://github.com/Makeathon-NU/Street-Nav/blob/master/StreetNav2.PNG" height=400></img>
+</p>
+
 MIT License
 
 Powered by geonames.org under a cc by license.
