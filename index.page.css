@@ -12,6 +12,7 @@ input
   font-weight: inherit;
   font-family: inherit;
   background-color: #FFFF99;
+  width: 100%;
 }
 
 input:hover
