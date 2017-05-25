@@ -54,7 +54,7 @@ Notes:
   * ℹ	Improvements can be made when direction is calculated over distance rather than time
 * When an android or iphone app are created and point to this website, it is possible for the device to continue speaking the intersections when the phone is asleep.  The phone could be in your pocket with headphones connected.
 
-Hopefully it helps! :) 
+Hope it helps! :) 
 
 
 Also check out our Street-Sight solution which allows users with a visual impairment to discreetly zoom in on any far away sign or object: 
