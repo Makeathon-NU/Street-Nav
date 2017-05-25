@@ -57,3 +57,5 @@ Notes:
 Hopefully it helps! :) 
 
 
+Also check out our Street-Sight solution which allows users with a visual impairment to discreetly zoom in on any far away sign or object: 
+https://github.com/Makeathon-NU/Street-Nav
